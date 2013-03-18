@@ -1,39 +1,24 @@
-//*************************BOTTLE NOSE *******************************
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+//Free beer and free software. Honeybadger.
 
-// Written by  : Tim Cannon
-// Description : Bottle Nose is an echolocation/sonar simulator for those 
-//               with finger magnet implants. It functions by creating variable  
-//               delays in the pulsing of an electromagnet. Sensor data from an
-//               ultrasonic range finder governs this delay causing the pulsing
-//               to increase when objects are close and decrease when they are
-//               distant.
-       
 
-//declare various pins
-const int statPin = 6; //status light - this lets us know there is logic
-const int pingPin = A0; //analog pin for reading the analog out from range finder
-const int magPin = 8; //  electro magnet
+#include <NewPing.h>
+
+#define TRIGGER_PIN  12  // Arduino pin tied to trigger pin on the ultrasonic sensor.
+#define ECHO_PIN     11  // Arduino pin tied to echo pin on the ultrasonic sensor.
+#define MAX_DISTANCE 200 // Maximum distance we want to ping for (in centimeters). Maximum sensor distance is rated at 400-500cm.
+#define LED 8           // LED as placeholder for magnetic output
+#define statPin 6       //status light - this lets us know there is logic
+
+NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE); // NewPing setup of pins and maximum distance.
+
 
 void setup() {
-
-  Serial.begin(9600);
+  pinMode(LED, OUTPUT); // Initialize the LED pin as an output.
+  Serial.begin(115200); // Open serial monitor at 115200 baud to see ping results.
   Serial.println("Starting BottleNose");
   //set the status light pin and magnet pin
   //to output, that way we can "write" volts 
   //to that pin.  
-  pinMode(magPin, OUTPUT);
   pinMode(statPin, OUTPUT);
   //now blink the status light to let the user 
   //know everything is ok so far
@@ -46,31 +31,14 @@ void setup() {
   digitalWrite(statPin, LOW);
 }
 
-void loop()
-{
-  //read the value that the range finder
-  //returns and place it in a variable.
-  int sensorValue = analogRead(pingPin);    
-  //inform anyone listening to the Serial 
-  //Port what the value was
-  Serial.print("Sensor Value: ");
-  Serial.println(sensorValue);
-  //now, over write the value, with the mapped
-  //value. This function gives us the proper
-  //delay given the analog input.
-  sensorValue = map(sensorValue,10,255,50,800);
-  //inform listenewr of the result
-  Serial.print("Delay: ");
-  Serial.println(sensorValue);
-  //now pulse the magnet once by setting
-  //it HIGH, and then almost immediately 
-  //LOW
-  digitalWrite(magPin, HIGH);   
-  delay(5);            
-  digitalWrite(magPin, LOW); 
-  // now delay for the appropriate time 
-  // derived from our map function 
-  delay(sensorValue);                  
+void loop() {
+  delay(20);                      // Wait 50ms between pings (about 20 pings/sec). 29ms should be the shortest delay between pings.
+  unsigned int distance = sonar.ping() / US_ROUNDTRIP_CM;
+  Serial.println(distance);
+
+  
+  digitalWrite(LED, HIGH);   // Turn the LED on
+  delay(distance << 1);      // Wait proportional to distance
+  digitalWrite(LED, LOW);    // Turn the LED off
+  delay(distance << 1);      // Wait again
 }
-
-
