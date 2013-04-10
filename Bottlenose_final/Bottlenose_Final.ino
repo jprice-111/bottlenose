@@ -21,8 +21,8 @@ int intensity = 10;
 int interval = 0;
 int tempMin = 0;
 int tempMax = 100;
-int mapLow = 50;
-int mapHigh = 800;
+int mapLow = 2;
+int mapHigh = 50;
 
 long previousMillis = 0;
 String inputString = "";         // a string to hold incoming data
