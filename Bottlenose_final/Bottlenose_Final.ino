@@ -21,6 +21,8 @@ int intensity = 10;
 int interval = 0;
 int tempMin = 0;
 int tempMax = 100;
+int mapLow = 50;
+int mapHigh = 800;
 
 long previousMillis = 0;
 String inputString = "";         // a string to hold incoming data
@@ -82,7 +84,7 @@ void loop() {
       
     while (state == 'sonar') {
       unsigned int distance = sonar.ping() / US_ROUNDTRIP_CM;
-      intensity = map(distance,10,255,50,800);
+      intensity = map(distance,10,255,mapLow,mapHigh);
     }
     
     while (state == 'thermo') {
@@ -100,17 +102,15 @@ void loop() {
       i2c_stop(); //next line- converts high and low bytes together and processes temperature, MSB is a error bit and is ignored for temps
       double tempFactor = 0.02; // 0.02 degrees per LSB (measurement resolution of the MLX90614)
       double tempData = 0x0000; // zero out the data
-      int frac; // data past the decimal point  // This masks off the error bit of the high byte, then moves it left 8 bits and adds the low byte.
       tempData = (double)(((data_high & 0x007F) << 8) + data_low);
       tempData = (tempData * tempFactor)-0.01;
       float celcius = tempData - 273.15;
-      intensity = map(celcius,tempMax,tempMin,50,800);
+      intensity = map(celcius,tempMax,tempMin,mapLow,mapHigh);
   }
   
    unsigned long currentMillis = millis();
     if(currentMillis - previousMillis < interval) {
       digitalWrite(MAGNET_PIN, HIGH);
-      //okay, there is a small delay, but this one isn"t the problem.
       delay(intensity);            
       digitalWrite(MAGNET_PIN, LOW);
       delay(10);
