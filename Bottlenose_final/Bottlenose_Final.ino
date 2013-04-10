@@ -4,16 +4,17 @@
 
 #include <NewPing.h>
 
+#define MAX_DISTANCE 200 // Maximum distance we want to ping for (in centimeters). Maximum sensor distance is rated at 400-500cm.
+
 #define TRIGGER_PIN  12  // Arduino pin tied to trigger pin on the ultrasonic sensor.
 #define ECHO_PIN     11  // Arduino pin tied to echo pin on the ultrasonic sensor.
-#define MAX_DISTANCE 200 // Maximum distance we want to ping for (in centimeters). Maximum sensor distance is rated at 400-500cm.
-#define MAGNET 8         // Electromagnet goes here. Use an LED instead for testing.
-#define statPin 6        //status light - this lets us know there is logic
+#define MAGNET_PIN   8   // Electromagnet goes here. Use an LED instead for testing.
+#define STAT_PIN      6   //status light - this lets us know there is logic
 
 NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE); // NewPing setup of pins and maximum distance.
 
-int switchPinSonar = 9;
-int switchPinThermo = 10;
+int SONAR_PIN = 9;
+int THERMO_PIN = 10;
 
 char state;
 int intensity;
@@ -49,22 +50,22 @@ void setup()
    Serial.println("Starting BottleNose");
   i2c_init(); //Initialise the i2c bus
   PORTC = (1 << PORTC4) | (1 << PORTC5);//enable pullups
-  digitalWrite(statPin, HIGH);
+  digitalWrite(STAT_PIN, HIGH);
   delay(250);
-  digitalWrite(statPin, LOW);
+  digitalWrite(STAT_PIN, LOW);
   delay(250);
-  digitalWrite(statPin, HIGH);
+  digitalWrite(STAT_PIN, HIGH);
   delay(250);
-  digitalWrite(statPin, LOW);
+  digitalWrite(STAT_PIN, LOW);
 }
 
 void loop() {
   
-  if (digitalRead(switchPinSonar == HIGH)) {
+  if (digitalRead(SONAR_PIN == HIGH)) {
     state = 'sonar';
   }
   
-  if (digitalRead(switchPinThermo == HIGH)) {
+  if (digitalRead(THERMO_PIN == HIGH)) {
     state = 'thermo';
   }
   
