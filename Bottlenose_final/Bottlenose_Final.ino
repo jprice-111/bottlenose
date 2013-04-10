@@ -9,7 +9,7 @@
 #define TRIGGER_PIN  12  // Arduino pin tied to trigger pin on the ultrasonic sensor.
 #define ECHO_PIN     11  // Arduino pin tied to echo pin on the ultrasonic sensor.
 #define MAGNET_PIN   8   // Electromagnet goes here. Use an LED instead for testing.
-#define STAT_PIN      6   //status light - this lets us know there is logic
+#define STAT_PIN     6   //status light - this lets us know there is logic
 
 NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE); // NewPing setup of pins and maximum distance.
 
@@ -17,8 +17,8 @@ int SONAR_PIN = 9;
 int THERMO_PIN = 10;
 
 char state;
-int intensity;
-int interval;
+int intensity = 10;
+int interval = 0;
 int tempMin = 0;
 int tempMax = 100;
 
@@ -27,6 +27,7 @@ String inputString = "";         // a string to hold incoming data
 boolean stringComplete = false;  // whether the string is complete
 
 void serialEvent() {
+//This function separates serial data into lines and returns them as strings.
   while (Serial.available()) {
     // get the new byte:
     char inChar = (char)Serial.read(); 
@@ -42,6 +43,8 @@ void serialEvent() {
 
 void setup() 
 {
+  pinMode(MAGNET_PIN,OUTPUT);
+  pinMode(STAT_PIN,OUTPUT);
   SoftwareSerial mySerial(2,3);
   Serial.begin(9600);
   // reserve 200 bytes for the inputString:
@@ -61,11 +64,11 @@ void setup()
 
 void loop() {
   
-  if (digitalRead(SONAR_PIN == HIGH)) {
+  if (digitalRead(SONAR_PIN) == HIGH) {
     state = 'sonar';
   }
   
-  if (digitalRead(THERMO_PIN == HIGH)) {
+  else if (digitalRead(THERMO_PIN) == HIGH) {
     state = 'thermo';
   }
   
@@ -76,18 +79,6 @@ void loop() {
     inputString = "";
     stringComplete = false;
   }
-  
-    unsigned long currentMillis = millis();
-    if(currentMillis - previousMillis < interval) {
-      digitalWrite(LED, HIGH);
-      //okay, there is a small delay, but this one isn"t the problem.
-      delay(intensity);            
-      digitalWrite(LED, LOW);
-      delay(10);
-      }
-      else {
-        previousMillis = currentMillis;
-      }
       
     while (state == 'sonar') {
       unsigned int distance = sonar.ping() / US_ROUNDTRIP_CM;
@@ -113,9 +104,20 @@ void loop() {
       tempData = (double)(((data_high & 0x007F) << 8) + data_low);
       tempData = (tempData * tempFactor)-0.01;
       float celcius = tempData - 273.15;
-      float fahrenheit = (celcius*1.8) + 32;
       intensity = map(celcius,tempMax,tempMin,50,800);
   }
+  
+   unsigned long currentMillis = millis();
+    if(currentMillis - previousMillis < interval) {
+      digitalWrite(MAGNET_PIN, HIGH);
+      //okay, there is a small delay, but this one isn"t the problem.
+      delay(intensity);            
+      digitalWrite(MAGNET_PIN, LOW);
+      delay(10);
+      }
+      else {
+        previousMillis = currentMillis;
+      }
 }
 
 
