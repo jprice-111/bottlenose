@@ -1,43 +1,33 @@
 #include <i2cmaster.h>
 #include <SoftwareSerial.h>
 #include <String.h>
-
 #include <NewPing.h>
 
-#define MAX_DISTANCE 200 // Maximum distance we want to ping for (in centimeters). Maximum sensor distance is rated at 400-500cm.
-
-#define TRIGGER_PIN  12  // Arduino pin tied to trigger pin on the ultrasonic sensor.
-#define ECHO_PIN     11  // Arduino pin tied to echo pin on the ultrasonic sensor.
-#define MAGNET_PIN   8   // Electromagnet goes here. Use an LED instead for testing.
-#define STAT_PIN     6   //status light - this lets us know there is logic
-
-NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE); // NewPing setup of pins and maximum distance.
-
-int SONAR_PIN = 9;
-int THERMO_PIN = 10;
-
-char state;
-int intensity = 10;
-int interval = 0;
-int tempMin = 0;
-int tempMax = 100;
-int mapLow = 2;
-int mapHigh = 50;
-
+//variables
+int intensity   = 10; //Output value to magnet
+int interval    = 0;
+int tempMin     = 0; //Calibration range for temperature sensor
+int tempMax     = 100;
+int mapLow      = 2; //Range for intensity output to magnet
+int mapHigh     = 50;
+int maxDistance = 200; // Maximum distance we want to ping for (in centimeters). Maximum sensor distance is rated at 400-500cm.
+int triggerPin  = 12;  // Arduino pin tied to trigger pin on the ultrasonic sensor.
+int echoPin     = 11;  // Arduino pin tied to echo pin on the ultrasonic sensor.
+int magnetPin   = 8;   // Electromagnet goes here. Use an LED instead for testing.
+int statPin     = 6;   //status light - this lets us know there is logic
+int sonarPin    = 9;    //switch pins. set one high to turn on that sensor option.
+int thermoPin   = 10;
 long previousMillis = 0;
+String state;                    //sensor state
 String inputString = "";         // a string to hold incoming data
 boolean stringComplete = false;  // whether the string is complete
+NewPing sonar(triggerPin, echoPin, maxDistance); // NewPing setup of pins and maximum distance.
 
-void serialEvent() {
-//This function separates serial data into lines and returns them as strings.
+void serialEvent() { //This function separates serial data into lines and returns them as strings.
   while (Serial.available()) {
-    // get the new byte:
-    char inChar = (char)Serial.read(); 
-    // add it to the inputString:
-    inputString += inChar;
-    // if the incoming character is a newline, set a flag
-    // so the main loop can do something about it:
-    if (inChar == '\n') {
+    char inChar = (char)Serial.read(); // get the new byte:
+    inputString += inChar; // add it to the inputString
+    if (inChar == '\n') {  // if the incoming character is a newline, set a flag so the main loop can do something about it:
       stringComplete = true;
     } 
   }
@@ -45,50 +35,50 @@ void serialEvent() {
 
 void setup() 
 {
-  pinMode(MAGNET_PIN,OUTPUT);
-  pinMode(STAT_PIN,OUTPUT);
+  pinMode(triggerPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(magnetPin, OUTPUT);
+  pinMode(statPin, OUTPUT);
+  pinMode(sonarPin, INPUT);
+  pinMode(thermoPin, INPUT);
   SoftwareSerial mySerial(2,3);
   Serial.begin(9600);
-  // reserve 200 bytes for the inputString:
-  inputString.reserve(200);
+  inputString.reserve(200);  // reserve 200 bytes for the inputString
   mySerial.begin(9600);
-   Serial.println("Starting BottleNose");
+  Serial.println("Starting BottleNose");
   i2c_init(); //Initialise the i2c bus
   PORTC = (1 << PORTC4) | (1 << PORTC5);//enable pullups
-  digitalWrite(STAT_PIN, HIGH);
+  digitalWrite(statPin, HIGH); // flashes the light to let us know it's working
   delay(250);
-  digitalWrite(STAT_PIN, LOW);
+  digitalWrite(statPin, LOW);
   delay(250);
-  digitalWrite(STAT_PIN, HIGH);
+  digitalWrite(statPin, HIGH);
   delay(250);
-  digitalWrite(STAT_PIN, LOW);
+  digitalWrite(statPin, LOW);
 }
 
 void loop() {
   
-  if (digitalRead(SONAR_PIN) == HIGH) {
-    state = 'sonar';
+  if (digitalRead(sonarPin) == HIGH) {
+    state = "sonar";
   }
   
-  else if (digitalRead(THERMO_PIN) == HIGH) {
-    state = 'thermo';
+  else if (digitalRead(thermoPin) == HIGH) {
+    state = "thermo";
   }
   
-  // print the string when a newline arrives:
-  if (stringComplete) {
+  if (stringComplete) {  // print the string when a newline arrives:
     Serial.println(inputString); 
-    // clear the string:
-    inputString = "";
+    inputString = "";     // clear the string
     stringComplete = false;
   }
-      
-    while (state == 'sonar') {
+  
+  if (state.equalsIgnoreCase("sonar")) {
       unsigned int distance = sonar.ping() / US_ROUNDTRIP_CM;
       intensity = map(distance,10,255,mapLow,mapHigh);
     }
-    
-    while (state == 'thermo') {
-      //the following is from bildr to handle the MLX90614.
+
+else if (state.equalsIgnoreCase("thermo")) {  //the following is from bildr to handle the MLX90614.
       int dev = 0x5A<<1;
       int data_low = 0;
       int data_high = 0;
@@ -109,15 +99,14 @@ void loop() {
   }
   
    unsigned long currentMillis = millis();
-    if(currentMillis - previousMillis < interval) {
-      digitalWrite(MAGNET_PIN, HIGH);
-      delay(intensity);            
-      digitalWrite(MAGNET_PIN, LOW);
-      delay(10);
+   if((currentMillis - previousMillis) > interval) {
+     digitalWrite(magnetPin, HIGH);
+     delay(intensity);            
+     digitalWrite(magnetPin, LOW);
+     delay(10);
+     }
+   else {
+     previousMillis = currentMillis;
       }
-      else {
-        previousMillis = currentMillis;
-      }
+      
 }
-
-
