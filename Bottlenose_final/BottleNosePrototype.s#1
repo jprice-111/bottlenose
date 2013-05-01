@@ -10185,9 +10185,9 @@ type 0309, grid 2.5 mm</description>
 <attribute name="VALUE" x="27.94" y="66.802" size="1.778" layer="96" rot="MR0"/>
 </instance>
 <instance part="GND8" gate="1" x="12.7" y="63.5"/>
-<instance part="CH" gate="-1" x="137.16" y="38.1"/>
-<instance part="CH" gate="-2" x="137.16" y="35.56"/>
-<instance part="SUPPLY1" gate="GND" x="134.62" y="30.48"/>
+<instance part="CH" gate="-1" x="139.7" y="38.1"/>
+<instance part="CH" gate="-2" x="139.7" y="35.56"/>
+<instance part="SUPPLY1" gate="GND" x="137.16" y="30.48"/>
 <instance part="SUPPLY3" gate="GND" x="121.92" y="30.48"/>
 <instance part="RF1" gate="-1" x="63.5" y="-5.08" rot="R270"/>
 <instance part="RF1" gate="-2" x="66.04" y="-5.08" rot="R270"/>
@@ -10264,7 +10264,7 @@ type 0309, grid 2.5 mm</description>
 <segment>
 <pinref part="CH" gate="-2" pin="S"/>
 <pinref part="SUPPLY1" gate="GND" pin="GND"/>
-<wire x1="134.62" y1="35.56" x2="134.62" y2="33.02" width="0.1524" layer="91"/>
+<wire x1="137.16" y1="33.02" x2="137.16" y2="35.56" width="0.1524" layer="91"/>
 </segment>
 <segment>
 <pinref part="IRF630" gate="G$1" pin="G"/>
@@ -10362,7 +10362,7 @@ type 0309, grid 2.5 mm</description>
 <segment>
 <pinref part="IRF630" gate="G$1" pin="D"/>
 <pinref part="CH" gate="-1" pin="S"/>
-<wire x1="132.08" y1="38.1" x2="134.62" y2="38.1" width="0.1524" layer="91"/>
+<wire x1="132.08" y1="38.1" x2="137.16" y2="38.1" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$13" class="0">

@@ -10208,7 +10208,7 @@ type 0309, grid 2.5 mm</description>
 <busses>
 </busses>
 <nets>
-<net name="N$1" class="0">
+<net name="N$24" class="0">
 <segment>
 <wire x1="-132.08" y1="71.12" x2="-119.38" y2="71.12" width="0.1524" layer="91"/>
 <wire x1="-119.38" y1="71.12" x2="-111.76" y2="71.12" width="0.1524" layer="91"/>
