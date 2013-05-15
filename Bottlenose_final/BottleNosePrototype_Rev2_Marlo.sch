@@ -8611,7 +8611,7 @@ general purpose rectifier, 1 A</description>
 <attribute name="VALUE" x="36.576" y="46.99" size="1.778" layer="96" rot="MR180"/>
 </instance>
 <instance part="GND15" gate="1" x="35.56" y="43.18"/>
-<instance part="R7" gate="G" x="144.78" y="30.48" rot="R270"/>
+<instance part="R7" gate="G" x="144.78" y="55.88" rot="R90"/>
 <instance part="IC1" gate="1" x="17.78" y="35.56"/>
 <instance part="D1" gate="1" x="154.94" y="48.26" rot="R90"/>
 <instance part="R6" gate="G$1" x="134.62" y="50.8" rot="R90"/>
@@ -8817,13 +8817,6 @@ general purpose rectifier, 1 A</description>
 <wire x1="109.22" y1="71.12" x2="132.08" y2="71.12" width="0.1524" layer="91"/>
 </segment>
 </net>
-<net name="N$10" class="0">
-<segment>
-<pinref part="ATMEGA328" gate="G$1" pin="PB0(ICP)"/>
-<wire x1="101.6" y1="25.4" x2="144.78" y2="25.4" width="0.1524" layer="91"/>
-<pinref part="R7" gate="G" pin="S"/>
-</segment>
-</net>
 <net name="USB_D-" class="0">
 <segment>
 <wire x1="15.24" y1="137.16" x2="-40.64" y2="137.16" width="0.1524" layer="91"/>
@@ -9014,12 +9007,8 @@ general purpose rectifier, 1 A</description>
 <pinref part="IC1" gate="1" pin="OUT"/>
 <junction x="25.4" y="35.56"/>
 <wire x1="124.46" y1="73.66" x2="124.46" y2="60.96" width="0.1524" layer="91"/>
-<wire x1="124.46" y1="60.96" x2="149.86" y2="60.96" width="0.1524" layer="91"/>
-<pinref part="D1" gate="1" pin="C"/>
-<wire x1="154.94" y1="50.8" x2="149.86" y2="50.8" width="0.1524" layer="91"/>
-<wire x1="149.86" y1="60.96" x2="149.86" y2="50.8" width="0.1524" layer="91"/>
-<pinref part="R8" gate="G$1" pin="1"/>
-<wire x1="160.02" y1="50.8" x2="154.94" y2="50.8" width="0.1524" layer="91"/>
+<wire x1="124.46" y1="60.96" x2="144.78" y2="60.96" width="0.1524" layer="91"/>
+<pinref part="R7" gate="G" pin="S"/>
 </segment>
 </net>
 <net name="N$5" class="0">
@@ -9033,12 +9022,12 @@ general purpose rectifier, 1 A</description>
 </net>
 <net name="N$1" class="0">
 <segment>
-<pinref part="R7" gate="G" pin="A"/>
 <pinref part="IRF630" gate="G$1" pin="G"/>
-<wire x1="139.7" y1="30.48" x2="134.62" y2="30.48" width="0.1524" layer="91"/>
-<wire x1="134.62" y1="30.48" x2="134.62" y2="40.64" width="0.1524" layer="91"/>
+<wire x1="134.62" y1="25.4" x2="134.62" y2="40.64" width="0.1524" layer="91"/>
 <pinref part="R6" gate="G$1" pin="1"/>
 <wire x1="134.62" y1="40.64" x2="134.62" y2="45.72" width="0.1524" layer="91"/>
+<pinref part="ATMEGA328" gate="G$1" pin="PB0(ICP)"/>
+<wire x1="101.6" y1="25.4" x2="134.62" y2="25.4" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="N$46" class="0">
@@ -9059,6 +9048,16 @@ general purpose rectifier, 1 A</description>
 <wire x1="175.26" y1="50.8" x2="175.26" y2="45.72" width="0.1524" layer="91"/>
 <pinref part="R8" gate="G$1" pin="2"/>
 <wire x1="170.18" y1="50.8" x2="175.26" y2="50.8" width="0.1524" layer="91"/>
+</segment>
+</net>
+<net name="N$10" class="0">
+<segment>
+<pinref part="D1" gate="1" pin="C"/>
+<pinref part="R8" gate="G$1" pin="1"/>
+<wire x1="160.02" y1="50.8" x2="154.94" y2="50.8" width="0.1524" layer="91"/>
+<wire x1="154.94" y1="50.8" x2="149.86" y2="50.8" width="0.1524" layer="91"/>
+<pinref part="R7" gate="G" pin="A"/>
+<wire x1="149.86" y1="55.88" x2="149.86" y2="50.8" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
