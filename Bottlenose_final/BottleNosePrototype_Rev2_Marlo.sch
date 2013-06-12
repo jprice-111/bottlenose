@@ -7332,6 +7332,7 @@ general purpose rectifier, 1 A</description>
 <wire x1="124.46" y1="73.66" x2="124.46" y2="60.96" width="0.1524" layer="91"/>
 <wire x1="124.46" y1="60.96" x2="144.78" y2="60.96" width="0.1524" layer="91"/>
 <pinref part="R7" gate="G" pin="S"/>
+<junction x="124.46" y="73.66"/>
 </segment>
 </net>
 <net name="N$5" class="0">
